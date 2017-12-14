@@ -8,8 +8,24 @@ class App extends React.Component {
 
     this.state = {
       selected: this.props.videos[0]
+      //videos: updated with returned search data (auto re-renders view)
     };
+
+    this.onTitleClick = this.onTitleClick.bind(this);
   }
+
+  //listener for which video is clicked on
+  onTitleClick(video) {
+    // updates selected prop in app state
+    this.setState(() => ({
+      selected: video
+    }));
+  }
+
+
+  //search/fetch 
+    //fetch new data
+    //update this.state.videos
 
   render() {
     return (
@@ -21,10 +37,15 @@ class App extends React.Component {
         </nav>
         <div className="row">
           <div className="col-md-7">
-            <VideoPlayer video={this.state.selected}/>
+            <VideoPlayer 
+              video={this.state.selected}
+            />
           </div>
           <div className="col-md-5">
-            <VideoList videos={this.props.videos}/>
+            <VideoList 
+              videos={this.props.videos} 
+              onTitleClick={this.onTitleClick}
+            />
           </div>
         </div>
       </div>
@@ -32,25 +53,6 @@ class App extends React.Component {
   }
 
 }
-
-
-// var App = (props) => (
-//   <div>
-//     <nav className="navbar">
-//       <div className="col-md-6 offset-md-3">
-//         <div><h5><em>search</em> view goes here</h5></div>
-//       </div>
-//     </nav>
-//     <div className="row">
-//       <div className="col-md-7">
-//         <VideoPlayer video={props.videos[0]}/>
-//       </div>
-//       <div className="col-md-5">
-//         <VideoList videos={props.videos}/>
-//       </div>
-//     </div>
-//   </div>
-// );
 
 // In the ES6 spec, files are "modules" and do not share a top-level scope
 // `var` declarations will only exist globally where explicitly defined

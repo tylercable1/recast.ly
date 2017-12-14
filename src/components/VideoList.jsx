@@ -1,10 +1,11 @@
 
 //props.videos = video list array
+//props.onTitleClick = function from app.jsx
 
 var VideoList = (props) => (
  <div className="video-list">
     {props.videos.map((video) =>
-      <VideoListEntry video={video} />
+      <VideoListEntry key={video.id.videoId} video={video} onTitleClick={props.onTitleClick} />
     )}
   </div>
 );
