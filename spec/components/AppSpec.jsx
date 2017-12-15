@@ -10,8 +10,7 @@ describe('App', function() {
 
   beforeEach(function() {
     app = renderIntoDocument(
-      // <App searchYouTube={() => {}}/>
-      <App videos={window.fakeVideoData} />
+      <App searchYouTube={() => {}}/>
     );
   });
 

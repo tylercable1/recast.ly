@@ -11,14 +11,22 @@ var searchYouTube = (options, callback) => {
   $.ajax({
     url: 'https://www.googleapis.com/youtube/v3/search',
     type: 'GET',
-    data: options,
+    data: {
+      //rename first 3 keys to suit Youtube's expected key names on output to Youtube, 
+      //no matter how the keys are named in the input
+      key: options.key,
+      q: options.query,
+      maxResults: options.max,
+      part: 'snippet',
+      type: 'video',
+      videoEmbeddable: 'true'
+    },
     success: function(data) {
-      console.log('SUCCESS!!!!!!!!!!');
-      console.log(data);
-      callback(data);
+      console.log('SUCCESS');
+      callback(data.items);
     },
     error: function() {
-      console.log('error');
+      console.log('ERROR');
     }
   });
 };

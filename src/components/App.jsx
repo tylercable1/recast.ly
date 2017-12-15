@@ -1,22 +1,26 @@
-
-// props.videos = global videos array
-
 class App extends React.Component {
   
   constructor(props) {
     super(props);
 
     this.state = {
-      selected: this.props.videos[0],
-      searchString: ''
-      //videos: updated with returned search data (auto re-renders view)
+      searchString: '',
+      selected: window.exampleVideoData[0],
+      videos: window.exampleVideoData
     };
 
     this.onTitleClick = this.onTitleClick.bind(this);
-
-    //pass onSubmit func with binding to Search component
-    this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onEnterKey = this.onEnterKey.bind(this);
+    this.updateContent = this.updateContent.bind(this);
+    
+  }
+
+  //this func will run automatically when app is initialized (similar to Backbone's initialize)
+  componentDidMount() {
+    //default search query upon app start-up until search is entered
+    this.search('kitty', 5);
   }
 
   //listener for which video is clicked on
@@ -26,41 +30,46 @@ class App extends React.Component {
       selected: video
     }));
   }
-  onChange(event) {
-    this.setState(() => ({
-      selected: video
-    }));
 
+  onChange(event) {
+    this.setState({
+      searchString: event.target.value
+    });
+    this.search(this.state.searchString);
   }
-  //listener for search button submission / enter button
+
   onSubmit() {
     // calls Search, pass in input string
-    search(this.state.searchString)
+    this.search(this.state.searchString);
   }
 
+  onEnterKey(e) {
+    if (e.key === 'Enter') {
+      this.search(this.state.searchString);
+    }
+  } 
 
   //callback passed to searchYouTube()
   updateContent(data) {
     //receive data from ajax call
     //update state (videos)
-    //this.setState()...
+    this.setState({
+      videos: data,
+      selected: data[0]
+    });
   }
 
 //search(str from onSumbit)
-    //create the data objec to be passed to searchYouTube
-      // options = {
-        //   query: string received from search bar
-        //   max: 5
-        //   key: our key 
-        //   videoEmbeddable: 'true'
-        //   type: 'video'
-        // };
-
+  search(query, maxResults) {
+    //create the data object to be passed to searchYouTube
     //call global searchYouTube func, passing in object & callback UpdateContent
+    this.props.searchYouTube({
+      key: window.YOUTUBE_API_KEY, 
+      query: query,
+      max: maxResults || 5
+    }, this.updateContent);
+  }
 
-
-
-//update Search instantiation to pass in onSubmit prop to btn
   render() {
     return (
       <div>
@@ -69,6 +78,7 @@ class App extends React.Component {
             <Search 
               onSubmit={this.onSubmit}
               onChange={this.onChange}
+              onEnterKey={this.onEnterKey}
             />
           </div>
         </nav>
@@ -80,7 +90,7 @@ class App extends React.Component {
           </div>
           <div className="col-md-5">
             <VideoList 
-              videos={this.props.videos} 
+              videos={this.state.videos} 
               onTitleClick={this.onTitleClick}
             />
           </div>
@@ -88,9 +98,7 @@ class App extends React.Component {
       </div>
     );
   }
-
 }
-
 // In the ES6 spec, files are "modules" and do not share a top-level scope
 // `var` declarations will only exist globally where explicitly defined
 window.App = App;

@@ -3,4 +3,4 @@
 
 //potentially
   // set the first videos prop equal to a call to search 
-ReactDOM.render(<App videos={window.exampleVideoData}/>, document.getElementById('app'));
+ReactDOM.render(<App searchYouTube={window.searchYouTube} />, document.getElementById('app'));
